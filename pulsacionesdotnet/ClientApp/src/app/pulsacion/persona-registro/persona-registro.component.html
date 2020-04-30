@@ -6,13 +6,13 @@
     
     <h2>Registro de Personas</h2>
     
-    <form >
+    <form [formGroup]="formGroup">
     
     <div class="form-group">
     
     <label>Identificacion</label>
     
-    <input type="text" name="identificacion" [(ngModel)]="persona.identificacion" class="form-control" />
+    <input type="text" name="identificacion" formControlName="identificacion" class="form-control" />
     
     </div>
     
@@ -20,15 +20,23 @@
     
     <label>Nombre</label>
     
-    <input type="text" name="nombre" [(ngModel)]="persona.nombre" class="form-control" />
+    <input type="text" name="nombre" formControlName="nombre" class="form-control" 
+    [ngClass]="{ 'is-invalid': control.sexo.errors && formGroup.get('nombre').touched}"
+
+    />
     
+    <div *ngIf="control.nombre.errors" class="invalid-feedback">
+
+      <div *ngIf="control.nombre.errors.required">Se require el nombre</div>
+      
+    </div>
     </div>
     
     <div class="form-group">
     
-    <label>Sexo</label>
+      <label>Sexo</label>
 
-    <select name="sexo" [(ngModel)]="persona.sexo" class="form-control">
+      <select name="sexo" formControlName="sexo" class="form-control">
 
         <option value="M" selected>M</option>
 
@@ -42,13 +50,13 @@
     
     <label>Edad</label>
     
-    <input type="number" name="edad" [(ngModel)]="persona.edad" class="form-control" />
+    <input type="number" name="edad" formControlName="edad" class="form-control" />
     
     </div>
     
     <div class="text-center">
     
-    <button class="btn btn-primary mr-1"(click)="add()">Registrar</button>
+    <button class="btn btn-primary mr-1"(click)="onSubmit()" [disabled]="formGroup.invalid">Registrar</button>
     
     <button class="btn btn-secondary" type="reset">Cancel</button>
     
