@@ -13,6 +13,9 @@ import { PersonaConsultaComponent } from './pulsacion/persona-consulta/persona-c
 import { PersonaRegistroComponent } from './pulsacion/persona-registro/persona-registro.component';
 import { AppRoutingModule } from './app-routing.module';
 import { PersonaService } from './services/persona.service';
+import { LoginComponent } from './login/login.component';
+import { JwtInterceptor } from './services/jwt.interceptor';
+import { UserRegistroComponent } from './pulsacion/user-registro/user-registro.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +26,8 @@ import { PersonaService } from './services/persona.service';
     FetchDataComponent,
     PersonaConsultaComponent,
     PersonaRegistroComponent,
+    LoginComponent,
+    UserRegistroComponent,
     
   ],
   imports: [
@@ -37,7 +42,7 @@ import { PersonaService } from './services/persona.service';
     ]),
     AppRoutingModule
   ],
-  providers: [PersonaService],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}, PersonaService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

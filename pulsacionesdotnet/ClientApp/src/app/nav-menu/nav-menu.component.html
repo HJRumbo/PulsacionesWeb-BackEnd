@@ -28,14 +28,25 @@
             <a class="nav-link text-dark" [routerLink]="['/']">Home</a>
           </li>
           <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/personaConsulta']"
+            <a class="nav-link text-dark" [routerLink]="['/personaConsulta']" *ngIf="currentUser"
               >Consultar</a
             >
           </li>
           <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/personaRegistro']"
+            <a class="nav-link text-dark" [routerLink]="['/personaRegistro']" *ngIf="currentUser"
               >Registrar persona</a
             >
+          </li>
+          <li class="nav-item" [routerLinkActive]="['link-active']" *ngIf="currentUser">
+            <a class="nav-link text-dark" (click)="logout()">Logout</a>
+          </li>
+
+          <li class="nav-item" [routerLinkActive]="['link-active']" *ngIf="!currentUser">
+            <a class="nav-link text-dark" [routerLink]="['/userRegistro']">Registrate</a>
+          </li>
+
+          <li class="nav-item" [routerLinkActive]="['link-active']" *ngIf="!currentUser">
+            <a class="nav-link text-dark" [routerLink]="['/login']">Login</a>
           </li>
         </ul>
       </div>
