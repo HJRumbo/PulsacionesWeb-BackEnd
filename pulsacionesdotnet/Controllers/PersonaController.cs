@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using pulsacionesdotnet.Models;
+using Microsoft.AspNetCore.SignalR;
+using pulsacionesdotnet.Hubs;
 
 namespace pulsacionesdotnet.Controllers
 {
@@ -18,10 +20,12 @@ namespace pulsacionesdotnet.Controllers
     [ApiController]
     public class PersonaController : ControllerBase
     {
+        private readonly IHubContext<SignalHub> _hubContext;
         private readonly PersonaService _personaService;
         public IConfiguration Configuration { get; }
-        public PersonaController(IConfiguration configuration)
+        public PersonaController(IConfiguration configuration, IHubContext<SignalHub> hubContext)
         {
+            _hubContext = hubContext;
             Configuration = configuration;
             string connectionString = Configuration["ConnectionStrings:DefaultConnection"];
             _personaService = new PersonaService(connectionString);
@@ -45,7 +49,7 @@ namespace pulsacionesdotnet.Controllers
         }
         // POST: api/Persona
         [HttpPost]
-        public ActionResult<PersonaViewModel> Post(PersonaInputModel personaInput)
+        public async Task<ActionResult<PersonaViewModel>> Post(PersonaInputModel personaInput)
         {
             Persona persona = MapearPersona(personaInput);
             var response = _personaService.Guardar(persona);
@@ -53,7 +57,9 @@ namespace pulsacionesdotnet.Controllers
             {
                 return BadRequest(response.Mensaje);
             }
-            return Ok(response.Persona);
+            var personaViewModel = new PersonaViewModel(response.Persona);
+            await _hubContext.Clients.All.SendAsync("PersonaRegistrada", personaViewModel);
+            return Ok(personaViewModel);
         }
         // DELETE: api/Persona/5
         [HttpDelete("{identificacion}")]

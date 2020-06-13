@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using pulsacionesdotnet.Config;
 using System.Text;
+using pulsacionesdotnet.Hubs;
 
 namespace pulsacionesdotnet
 {
@@ -109,6 +110,8 @@ namespace pulsacionesdotnet
                 ///////////////////////////////////////////////
             });
 
+            services.AddSignalR();
+
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -154,6 +157,7 @@ namespace pulsacionesdotnet
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
+                endpoints.MapHub<SignalHub>("/signalHub");
             });
             //start swagger
             app.UseSwagger();
